@@ -1,4 +1,6 @@
 #include "MKL26Z4.h"
+#include "uart0.h"
+#include <stdio.h>
 
 void ADC0_Calibrate(void) {
     ADC0_SC3 |= (1U << 7); // Start calibration
@@ -23,6 +25,9 @@ uint8_t ADC0_ReadChannel(uint8_t channel) {
 
 int main(void)
 {
+	// Init UART
+	UART0_Init();
+
 	// Enable clock in port B
 	SIM->SCGC5 |= (1U << 10);
 
@@ -47,14 +52,24 @@ int main(void)
 	ADC0_Calibrate();
 
 	uint8_t read_value = 0;
+	char message[20];
 
 	// Infinite loop reading every second
 	while (1) {
 		// Read directly from Analog Channel 8 (ADC0_SE8 maps to PTB0)
 		read_value = ADC0_ReadChannel(8);
 
+		//Convert to real value (from 0v to 3.3v)
+		float value = (3.3f / 255) * read_value;
+		uint8_t integer = (uint8_t)value;
+		uint8_t decimal = (uint8_t)((value - integer) * 100);
+
+		// Write value to UART0
+		snprintf(message, sizeof(message), "ADC0 Value: %d.%02d \r\n", integer, decimal);
+		UART0_WriteString(message);
+
 		// ~1 second delay
-		for (volatile int i = 0; i < 20971520; i++);
+		for (volatile int i = 0; i < 2000000; i++);
 	}
 
 	 return 0;
