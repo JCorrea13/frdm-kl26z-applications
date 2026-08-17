@@ -60,7 +60,7 @@ int main(void)
 	// Calibrate ADC0 before first conversion
 	ADC0_Calibrate();
 
-	// Start the first conversion
+	// Start the first conversion and enable interrupt
 	ADC0_SC1A = (8 & ADC_SC1_ADCH_MASK) | ADC_SC1_AIEN_MASK;
 
 	while(1) {
@@ -72,7 +72,7 @@ int main(void)
 			// delay
 			for (volatile int i = 0; i < 2000000; i++);
 
-			// start next conversion in channel 8
+			// start next conversion in channel 8 and enable interrupt
 			ADC0_SC1A = (8 & ADC_SC1_ADCH_MASK) | ADC_SC1_AIEN_MASK;
 		}
 
