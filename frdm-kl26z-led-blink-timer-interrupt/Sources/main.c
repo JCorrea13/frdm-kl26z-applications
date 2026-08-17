@@ -36,5 +36,11 @@ int main(void)
 
 	// Enable PIT interrupts in the ARM NVIC (Nested Vectored Interrupt Controller)
 	NVIC_EnableIRQ(PIT_IRQn);
+
+	// Infinite Loop
+	while(1){
+		__asm("NOP");
+	}
+
 	return 0;
 }
