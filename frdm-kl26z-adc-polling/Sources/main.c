@@ -54,7 +54,7 @@ int main(void)
 	uint8_t read_value = 0;
 	char message[20];
 
-	// Infinite loop reading every second
+	// Infinite loop
 	while (1) {
 		// Read directly from Analog Channel 8 (ADC0_SE8 maps to PTB0)
 		read_value = ADC0_ReadChannel(8);
@@ -68,7 +68,7 @@ int main(void)
 		snprintf(message, sizeof(message), "ADC0 Value: %d.%02d \r\n", integer, decimal);
 		UART0_WriteString(message);
 
-		// ~1 second delay
+		// delay
 		for (volatile int i = 0; i < 2000000; i++);
 	}
 
